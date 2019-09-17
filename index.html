@@ -1,0 +1,198 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="utf-8">
+	<title></title>
+	<style type="text/css">
+		html,body{
+			height:100%;
+		}
+		body{
+			border: 1px solid #000;
+			margin: 0;
+			background: url(img/bg.jpg) no-repeat center/cover;
+
+		}
+		.data-box{
+			/*内容居中*/
+			text-align: center;
+			margin-top: 10px;
+		}
+		table{
+			margin: 20px auto;
+			cursor: url(img/chuizi.png),pointer;
+		}
+		td{
+			width: 100px;
+			height: 100px;
+			border: 1px solid #000;
+			background: url(img/avabg.png);
+			text-align: center;
+			border-radius: 35px;
+			box-shadow: 0 0 10px rgb(60,120,90);
+			
+		}
+		.game{
+			display:none;
+		}
+		img{
+			width: 80px;
+			height: 80px;
+		}
+		.cover{
+			width:100%;
+			height:100%;
+			background-color:rgb(0,0,0,0.5);
+			display: flex;
+			justify-content: center;
+			align-items: center;
+		}
+		.cover>input{
+			width:230px;
+			height: 70px;
+			position: absolute;
+
+			margin: auto;
+			border-radius: 20px;
+			border:none;
+			outline: none;
+			background-image: linear-gradient(45deg,green,yellowgreen);
+			font-size: 20px;
+		}
+		.cover>#hard{
+			margin-top: 100px;
+		}
+	</style>
+</head>
+<body>
+	<!-- 初始化界面 -->
+	<div class="cover">
+		<input type="button"value="简单模式" id="easy">
+		<input type="button"value="地狱模式" id="hard">
+	</div>
+	<div class="game">
+		<div class="data-box">
+			<label>分数</label><input type="text" value="0" id="txtScore">
+			<label>倒计时</label><input type="text" value="30" id="txtRemtime">
+		</div>
+		<table id="tb">
+			<tr>
+				<td></td>
+				<td></td>
+				<td></td>
+				<td></td>
+				<td></td>
+			</tr>
+			<tr>
+				<td></td>
+				<td></td>
+				<td></td>
+				<td></td>
+				<td></td>
+			</tr>
+			<tr>
+				<td></td>
+				<td></td>
+				<td></td>
+				<td></td>
+				<td></td>
+			</tr>
+			<tr>
+				<td></td>
+				<td></td>
+				<td></td>
+				<td></td>
+				<td></td>
+			</tr>
+			<tr>
+				<td></td>
+				<td></td>
+				<td></td>
+				<td></td>
+				<td></td>
+			</tr>
+		</table>
+	</div>
+		
+		<script type="text/javascript">
+			//找到所有的td
+			var tdList=document.getElementsByTagName('td');
+			//console.log(tdList);
+
+			//倒计时
+			var txtRemtime=document.getElementById('txtRemtime');
+			var time=txtRemtime.value;
+
+			//找到分数的文本框
+			var txtScore=document.getElementById('txtScore')
+			var score=0;
+
+			//找到table，为了修改他的锤子
+			var tb=document.getElementById('tb');
+
+			//找到遮罩层
+			var cover=document.querySelector('.cover');
+
+			//游戏界面
+			var game=document.querySelector('.game');
+
+
+			//鼠标点击
+			for(var i=0;i<tdList.length;i++){
+				tdList[i].onmousedown=function(){
+					//修改table的锤子
+					tb.style.cursor="url(img/chuizid.png),auto";
+				}
+				tdList[i].onmouseup=function(){
+					//修改table的锤子
+					tb.style.cursor="url(img/chuizi.png),auto";
+					if(this.children.length!=0){
+						score++;
+						this.children[0].src='img/mouse2.png';
+					}
+					else{
+						score--;
+					}
+					txtScore.value=score;
+				}
+			}
+			//简单模式点击事件
+			document.getElementById('easy').onclick=function(){
+				startGame(1400,800)
+			}
+			//地域模式
+			document.getElementById('hard').onclick=function(){
+				startGame(600,400)
+			}
+
+			function startGame(creatTime,disTime){
+				//遮罩层隐藏
+				cover.style.display="none";
+				game.style.display="inline"
+
+				var mouseID=setInterval(function(){
+				//随机生成一个0-最大下标的随机数   （最大下标=数组的长度-1）
+				var idx=parseInt(Math.random()*tdList.length);
+				// console.log(idx)
+				tdList[idx].innerHTML='<img src="img/mouse1.png">';
+				setTimeout(function(){
+					tdList[idx].innerHTML='';
+				},disTime)
+			},creatTime)
+
+			//倒计时游戏时间
+			var timeID= setInterval(function(){
+				time--;
+				txtRemtime.value=time;
+				if(time==0){
+					clearInterval(timeID)
+					clearInterval(mouseID)
+					alert("游戏结束")
+				}
+			},1000)
+			}
+
+			
+		</script>
+</body>
+</html>
